@@ -1,0 +1,134 @@
+{
+  "expo": {
+    "name": "life-plan",
+    "slug": "life-plan",
+    "version": "1.0.2",
+    "orientation": "portrait",
+    "icon": "./assets/images/adaptive-icon.png",
+    "scheme": "lifeplan",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.faran.lifeplans",
+      "icon": "./assets/images/ios-light.png",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-4386055252112057~7452194192"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "We need access to your camera so you can add photos to your goals and life plan.",
+        "NSPhotoLibraryUsageDescription": "We need access to your photo library so you can attach existing photos to your goals and life plan.",
+        "NSUserTrackingUsageDescription": "Allow Life Plan to use your data to show you relevant ads that support our free app. Your privacy matters to us."
+      }
+    },
+    "android": {
+      "package": "com.faran.lifeplans",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/images/adaptive-icon.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-4386055252112057~5841505720"
+      }
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/Frame 7.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "image": "./assets/images/Frame 6.png",
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      "expo-web-browser",
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "Allow Life Plan to use your data to show you relevant ads that support our free app. Your privacy matters to us."
+        }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-4386055252112057~5841505720",
+          "iosAppId": "ca-app-pub-4386055252112057~7452194192",
+          "userTrackingUsageDescription": "Allow Life Plan to use your data to show you relevant ads that support our free app. Your privacy matters to us.",
+          "skAdNetworkItems": [
+            "cstr6suwn9.skadnetwork",
+            "4fzdc2evr5.skadnetwork",
+            "2fnua5tdw4.skadnetwork",
+            "ydx93a7ass.skadnetwork",
+            "p78axxw29g.skadnetwork",
+            "v72qych5uu.skadnetwork",
+            "ludvb6z3bs.skadnetwork",
+            "cp8zw746q7.skadnetwork",
+            "3sh42y64q3.skadnetwork",
+            "c6k4g5qg8m.skadnetwork",
+            "s39g8k73mm.skadnetwork",
+            "3qy4746246.skadnetwork",
+            "f38h382jlk.skadnetwork",
+            "hs6bdukanm.skadnetwork",
+            "mlmmfzh3r3.skadnetwork",
+            "v4nxqhlyqp.skadnetwork",
+            "wzmmz9fp6w.skadnetwork",
+            "su67r6k2v3.skadnetwork",
+            "yclnxrl5pm.skadnetwork",
+            "t38b2kh725.skadnetwork",
+            "7ug5zh24hu.skadnetwork",
+            "gta9lk7p23.skadnetwork",
+            "vutu7akeur.skadnetwork",
+            "y5ghdn5j9k.skadnetwork",
+            "v9wttpbfk9.skadnetwork",
+            "n38lu8286q.skadnetwork",
+            "47vhws6wlr.skadnetwork",
+            "kbd757ywx3.skadnetwork",
+            "9t245vhmpl.skadnetwork",
+            "a2p9lx4jpn.skadnetwork",
+            "22mmun2rn5.skadnetwork",
+            "44jx6755aq.skadnetwork",
+            "k674qkevps.skadnetwork",
+            "4468km3ulz.skadnetwork",
+            "2u9pt9hc89.skadnetwork",
+            "8s468mfl3y.skadnetwork",
+            "klf5c3l5u5.skadnetwork",
+            "kbmxgpxpgc.skadnetwork",
+            "uw77j35x4d.skadnetwork",
+            "578prtvx9j.skadnetwork",
+            "4dzt52r2t5.skadnetwork",
+            "tl55sbb4fm.skadnetwork",
+            "c3frkrj4fj.skadnetwork",
+            "e5fvkxwrpn.skadnetwork",
+            "8c4e2ghe7u.skadnetwork",
+            "3rd42ekr43.skadnetwork",
+            "97r2b46745.skadnetwork",
+            "3qcr597p9d.skadnetwork"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d9381847-5e6a-479f-ba1d-a1dccf067892"
+      }
+    },
+    "owner": "inertiadeals"
+  }
+}
