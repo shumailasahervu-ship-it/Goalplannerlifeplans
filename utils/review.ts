@@ -1,118 +1,63 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const REVIEW_PROMPT_KEY = '@lifeplan_review_prompt';
-const GOALS_CREATED_KEY = '@lifeplan_goals_created';
-const LAST_REVIEW_PROMPT_KEY = '@lifeplan_last_review_prompt';
+const KEY = '@lifeplan_review_data';
 
 export interface ReviewData {
-  hasSeenPrompt: boolean;
-  hasReviewed: boolean;
   goalsCreated: number;
-  lastPromptDate?: string;
+  hasReviewed: boolean;
+  promptShownAt?: number | null;
 }
 
-/**
- * Get review data from storage
- */
+const defaultData = (): ReviewData => ({
+  goalsCreated: 0,
+  hasReviewed: false,
+  promptShownAt: null,
+});
+
 export const getReviewData = async (): Promise<ReviewData> => {
   try {
-    const reviewPrompt = await AsyncStorage.getItem(REVIEW_PROMPT_KEY);
-    const goalsCreated = await AsyncStorage.getItem(GOALS_CREATED_KEY);
-    const lastPrompt = await AsyncStorage.getItem(LAST_REVIEW_PROMPT_KEY);
-    
+    const raw = await AsyncStorage.getItem(KEY);
+    if (!raw) return defaultData();
+    const parsed = JSON.parse(raw);
     return {
-      hasSeenPrompt: reviewPrompt === 'true',
-      hasReviewed: reviewPrompt === 'reviewed',
-      goalsCreated: goalsCreated ? parseInt(goalsCreated, 10) : 0,
-      lastPromptDate: lastPrompt || undefined,
+      ...defaultData(),
+      ...parsed,
     };
-  } catch (error) {
-    console.error('Error getting review data:', error);
-    return {
-      hasSeenPrompt: false,
-      hasReviewed: false,
-      goalsCreated: 0,
-    };
+  } catch {
+    return defaultData();
   }
 };
 
-/**
- * Increment goals created count
- */
+const setReviewData = async (data: ReviewData): Promise<void> => {
+  await AsyncStorage.setItem(KEY, JSON.stringify(data));
+};
+
 export const incrementGoalsCreated = async (): Promise<void> => {
-  try {
-    const current = await AsyncStorage.getItem(GOALS_CREATED_KEY);
-    const count = current ? parseInt(current, 10) : 0;
-    await AsyncStorage.setItem(GOALS_CREATED_KEY, (count + 1).toString());
-    console.log('Goals created count:', count + 1);
-  } catch (error) {
-    console.error('Error incrementing goals created:', error);
-  }
+  const d = await getReviewData();
+  await setReviewData({ ...d, goalsCreated: (d.goalsCreated || 0) + 1 });
 };
 
-/**
- * Check if we should show review prompt
- */
-export const shouldShowReviewPrompt = async (): Promise<boolean> => {
-  try {
-    const data = await getReviewData();
-    
-    // Don't show if already reviewed
-    if (data.hasReviewed) return false;
-    
-    // Don't show if seen recently (wait at least 30 days)
-    if (data.lastPromptDate) {
-      const lastPrompt = new Date(data.lastPromptDate);
-      const now = new Date();
-      const daysSincePrompt = (now.getTime() - lastPrompt.getTime()) / (1000 * 60 * 60 * 24);
-      if (daysSincePrompt < 30) return false;
-    }
-    
-    // Show after creating 3+ goals
-    return data.goalsCreated >= 3;
-  } catch (error) {
-    console.error('Error checking review prompt:', error);
-    return false;
-  }
-};
-
-/**
- * Mark review prompt as shown
- */
 export const markReviewPromptShown = async (): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(REVIEW_PROMPT_KEY, 'true');
-    await AsyncStorage.setItem(LAST_REVIEW_PROMPT_KEY, new Date().toISOString());
-    console.log('Review prompt marked as shown');
-  } catch (error) {
-    console.error('Error marking review prompt shown:', error);
-  }
+  const d = await getReviewData();
+  await setReviewData({ ...d, promptShownAt: Date.now() });
 };
 
-/**
- * Mark user as reviewed
- */
 export const markUserReviewed = async (): Promise<void> => {
-  try {
-    await AsyncStorage.setItem(REVIEW_PROMPT_KEY, 'reviewed');
-    console.log('User marked as reviewed');
-  } catch (error) {
-    console.error('Error marking user reviewed:', error);
-  }
+  const d = await getReviewData();
+  await setReviewData({ ...d, hasReviewed: true, promptShownAt: Date.now() });
 };
 
-/**
- * Reset review data (for testing)
- */
+export const shouldShowReviewPrompt = async (): Promise<boolean> => {
+  const d = await getReviewData();
+  if (d.hasReviewed) return false;
+  // Basic heuristic: show after 3 created goals, but only once per 7 days.
+  if ((d.goalsCreated || 0) < 3) return false;
+  const last = d.promptShownAt || 0;
+  const weekMs = 7 * 24 * 60 * 60 * 1000;
+  if (last && Date.now() - last < weekMs) return false;
+  return true;
+};
+
 export const resetReviewData = async (): Promise<void> => {
-  try {
-    await AsyncStorage.multiRemove([
-      REVIEW_PROMPT_KEY,
-      GOALS_CREATED_KEY,
-      LAST_REVIEW_PROMPT_KEY,
-    ]);
-    console.log('Review data reset');
-  } catch (error) {
-    console.error('Error resetting review data:', error);
-  }
+  await AsyncStorage.removeItem(KEY);
 };
